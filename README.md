@@ -1,4 +1,4 @@
-# Reddit Experience Clone Project
+# Reddit-like Experience Project
 
 <p>Built through from a step-by-step guidance on an experience where users can enable and host conversations--creating a community while enabling engagement and interaction.</p>
 
