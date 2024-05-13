@@ -1,9 +1,8 @@
-## Reddit Experience Clone Project
+# Reddit Experience Clone Project
 
 <p>Built through from a step-by-step guidance on an experience where users can enable and host conversations--creating a community while enabling engagement and interaction.</p>
 
-### Stack
-<hr /> 
+## Stack
 <p>
   <ul>
     <li>Next.js App Router</li>
@@ -17,8 +16,7 @@
   </ul>
 </p>
 
-### Functionality 
-<hr /> 
+## Functionality 
 <p>
   <ul>
     <li>Post, Comment, Reply to feed with infinite scrolling feature.</li>
