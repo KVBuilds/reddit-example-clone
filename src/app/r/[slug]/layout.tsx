@@ -4,12 +4,15 @@ import { format } from 'date-fns'
 import SubscribeLeaveToggle from "@/components/SubscribeLeaveToggle"
 import Link from "next/link"
 import { buttonVariants } from "@/components/ui/Button"
+import ToFeedButton from "@/components/ToFeedButton"
+import { db } from "@/lib/db"
+import { ReactNode } from "react"
 
 const Layout = async ({
     children, 
     params: { slug },
      }: { 
-        children: React.ReactNode
+        children: ReactNode
         params: {slug: string}
     }) => {
 
@@ -55,7 +58,7 @@ const Layout = async ({
     return ( 
     <div className="sm:container mx-w-7 mx-auto h-full pt-12">
         <div>
-            {/* TODO: Button to takae back */}
+            <ToFeedButton />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-y-4 md:gap-x-4 py-6">
                 <div className="flex flex-col col-span-2 space-y-6">{children}</div>
 
@@ -81,13 +84,13 @@ const Layout = async ({
                                 <div className="text-gray-900">{memberCount}</div>
                             </dd>
                         </div>
-                        {subreddit.creatorId === session?.user.id ? (
+                        {subreddit.creatorId === session?.user?.id ? (
                             <div className="flex justify-between gap-x-4 py-3">
                                 <p className="text-gray-500">You created this community</p>
                             </div>
                         ) : null }
 
-                        {subreddit.creatorId !== session?.user.id? (
+                        {subreddit.creatorId !== session?.user?.id ? (
                             <SubscribeLeaveToggle 
                             isSubscribed={isSubscribed}
                             subredditId={subreddit.id} subredditName={subreddit.name}/> 

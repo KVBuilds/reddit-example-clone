@@ -5,6 +5,11 @@ import { getAuthSession } from "@/lib/auth";
 import { HomeIcon } from "lucide-react";
 import Link from "next/link";
 
+//Exports dynamic behavior control and exports fetch caching behavior...
+//...how fetched resources should be cached
+export const dynamic = 'force-dynamic'
+export const fetchCache = 'force-no-store'
+
 export default async function Home() {
   //Checks if they are logged in or not
   const session = await getAuthSession()
