@@ -3,7 +3,7 @@ import { db } from "@/lib/db"
 import { SubredditValidator } from "@/lib/validators/subreddit"
 import { z } from "zod"
 
-export async function POST(req, Request) {
+export async function POST(req: Request) {
     try {
         const session = await getAuthSession()
 
