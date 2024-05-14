@@ -9,9 +9,10 @@ import { formatTimeToNow } from '@/lib/utils'
 import { CachedPost } from '@/types/redis'
 import { ArrowBigDown, ArrowBigUp, Loader2 } from 'lucide-react'
 import { notFound } from 'next/navigation'
-import { FC, Suspense } from 'react' 
+import { Suspense } from 'react' 
+import { Post, User, Vote } from '@prisma/client'
 
-interface PageProps {
+interface SubRedditPostPageProps {
     params: {
     postId: string
     }
@@ -19,21 +20,20 @@ interface PageProps {
 export const dynamic = 'force-dynamic'
 export const fetchCache = 'force-no-store'  // Hard loads information associated with the post.
 
-const page = async ({params}: PageProps) => {
-
+const SubRedditPostPage = async ({params}: SubRedditPostPageProps) => {
     const cachedPost = await redis.hgetall(`post:${params.postId}`) as CachedPost
 
-    let post: (Post & {votes: Vote[]; author: User }) | null = null
+    let post: (Post & { votes: Vote[]; author: User }) | null = null
 
     // Conditional check to gain necessary information for the post.
-    if(!cachedPost) {
-        post = await db.post.findFirst({
-            post: {
-                id: params.postId,
+        if (!cachedPost) {
+            post = await db.post.findFirst({
+            where: {
+            id: params.postId,
             },
-            include:{
-                votes: true, 
-                author: true, 
+            include: {
+            votes: true,
+            author: true,
             },
         })
     }
@@ -96,4 +96,4 @@ const page = async ({params}: PageProps) => {
     )
 }
 
-export default page
+export default SubRedditPostPage

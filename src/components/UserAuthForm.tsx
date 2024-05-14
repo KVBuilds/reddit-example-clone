@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 import {signIn} from "next-auth/react"
 import { Icons } from "./Icons"
 import { useToast } from "@/hooks/use-toast"
+import * as React from 'react'
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -17,7 +18,6 @@ const UserAuthForm: FC<UserAuthFormProps> = ({ className, ...props }) => {
         setIsLoading(true)
 
         try {
-            throw new Error
             await signIn('google')
         } catch (error) {
             // toast notification
@@ -34,6 +34,8 @@ const UserAuthForm: FC<UserAuthFormProps> = ({ className, ...props }) => {
     return (
         <div className={cn('flex justify-center', className)} {...props}>
             <Button onClick={loginWithGoogle} 
+            type='button'
+            disabled={isLoading}
             isLoading={isLoading} 
             size='sm' 
             className="w-full">
@@ -41,7 +43,7 @@ const UserAuthForm: FC<UserAuthFormProps> = ({ className, ...props }) => {
                 Google
             </Button>
         </div>
-    );
+    )
 }
 
-export default UserAuthForm;
+export default UserAuthForm

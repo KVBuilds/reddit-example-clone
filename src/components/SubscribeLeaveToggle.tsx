@@ -1,12 +1,12 @@
 "use client"
 
-import { FC, startTransition } from 'react'
+import { startTransition } from 'react'
 import { Button } from './ui/Button'
 import { SubscribeToSubredditPayload } from '@/lib/validators/subreddit'
 import axios, { AxiosError } from 'axios'
 import { useMutation } from '@tanstack/react-query'
 import { useCustomToast } from '@/hooks/use-custom-toast'
-import { toast } from '@/hooks/use-toast'
+import { useToast } from '@/hooks/use-toast'
 import { useRouter } from 'next/navigation'
 
 interface SubscribeLeaveToggle{
@@ -15,8 +15,8 @@ interface SubscribeLeaveToggle{
     isSubscribed: boolean 
 } 
 
-const SubscribeLeaveToggle: FC<SubscribeLeaveToggle> = ({subredditId, isSubscribed, subredditName,}) => {
-
+const SubscribeLeaveToggle = ({subredditId, isSubscribed, subredditName,}: SubscribeLeaveToggle) => {
+    const { toast } = useToast()
     const { loginToast } = useCustomToast()
     const router = useRouter()
 
@@ -48,7 +48,7 @@ const SubscribeLeaveToggle: FC<SubscribeLeaveToggle> = ({subredditId, isSubscrib
             startTransition(() => {
                 router.refresh()
             })
-            return toast({
+            toast({
                 title: 'Subscribed',
                 description: `You are now subscribed to /r${subredditName}`,
             })
@@ -66,16 +66,10 @@ const SubscribeLeaveToggle: FC<SubscribeLeaveToggle> = ({subredditId, isSubscrib
             return data as string
         },
         
-        onError: (err) => {
-            if(err instanceof AxiosError) {
-                if(err.response?.status ===401) {
-                    return loginToast()
-                }
-            }
-
-            return toast({
-                title: 'There was a problem.',
-                description: 'Something went wrong.',
+        onError: (err: AxiosError) => {
+            toast ({ 
+                title: 'Error',
+                description: err.response?.data as string, 
                 variant: 'destructive',
             })
         },
@@ -84,7 +78,7 @@ const SubscribeLeaveToggle: FC<SubscribeLeaveToggle> = ({subredditId, isSubscrib
             startTransition(() => {
                 router.refresh()
             })
-            return toast({
+            toast({
                 title: 'Unsubscribed',
                 description: `You are now unsubscribed from r/${subredditName}`,
             })

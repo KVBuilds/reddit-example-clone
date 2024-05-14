@@ -29,7 +29,7 @@ const CreateComment: FC<CreateCommentProps> = ({postId, replyToId}) => {
                 replyToId,
             }
 
-            const { data } = axios.patch(`/api/subreddit/post/comment`, payload)
+            const { data } = await axios.patch(`/api/subreddit/post/comment`, payload)
             return data
         },
         onError: (err) => {

@@ -12,29 +12,29 @@ import { ArrowBigDown, ArrowBigUp } from 'lucide-react'
 import { FC, useState } from 'react'
 import { Button } from './ui/Button'
 
-type PartialVote = Pick<CommentVote, 'type'>
-
-interface CommentVoteProps{
+interface CommentVotesProps{
     commentId: string
-    initialVotesAmt: number
-    initialVote?: PartialVote
+    votesAmt: number
+    currentVote?: PartialVote
 }
 
-const CommentVote: FC<CommentVoteProps> = ({
+type PartialVote = Pick<CommentVote, 'type'>
+
+const CommentVotes: FC<CommentVotesProps> = ({
     commentId,
-    initialVotesAmt,
-    initialVote,
+    votesAmt: _votesAmt,
+    currentVote: _currentVote,
 }) => {
         const { loginToast } = useCustomToast()
-        const [votesAmt, setVotesAmt] = useState<number>(initialVotesAmt)
-        const [currentVote, setCurrentVote] = useState(initialVote)
+        const [votesAmt, setVotesAmt] = useState<number>(_votesAmt)
+        const [currentVote, setCurrentVote] = useState<PartialVote | undefined>(_currentVote)
         const prevVote = usePrevious(currentVote)
 
         const {mutate: vote} = useMutation({
-            mutationFn: async (voteType: VoteType) => {
+            mutationFn: async (type: VoteType) => {
                 const payload: CommentVoteRequest = {
+                    voteType: type,
                     commentId,
-                    voteType,
                 }
                 // Send a patch request 
                 await axios.patch('/api/subreddit/post/comment/vote', payload)
@@ -60,7 +60,7 @@ const CommentVote: FC<CommentVoteProps> = ({
             },
 
             //Logic behind changing votes from a user
-            onMutate: (type) => {
+            onMutate: (type: VoteType) => {
                 if(currentVote?.type === type) {
                     setCurrentVote(undefined)
                     if(type === 'UP') setVotesAmt ((prev) => prev - 1)
@@ -93,4 +93,4 @@ const CommentVote: FC<CommentVoteProps> = ({
     </div>
 )}
 
-export default CommentVote
+export default CommentVotes

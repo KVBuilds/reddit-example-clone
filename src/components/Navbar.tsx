@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Icons } from './Icons';
 import { buttonVariants } from './ui/Button';
 import { authOptions } from '@/lib/auth';
-import UserAccountNav from './ui/UserAccountNav';
+import UserAccountNav from './UserAccountNav';
 import SearchBar from './SearchBar';
 import { getServerSession } from 'next-auth';
 

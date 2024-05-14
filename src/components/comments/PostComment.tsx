@@ -1,16 +1,17 @@
 "use client"
 
+import { useOnClickOutside } from '@/hooks/use-on-click-outside'
 import { FC, useRef, useState } from 'react'
-import UserAvatar from './UserAvatar'
+import UserAvatar from '../UserAvatar'
 import { Comment, CommentVote, User } from '@prisma/client'
 import { formatTimeToNow } from '@/lib/utils'
 import CommentVotes from "@/components/CommentVotes"
-import { Button } from './ui/Button'
+import { Button } from '../ui/Button'
 import { MessageSquare } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { Label } from './ui/Label'
-import { Textarea } from './ui/Textarea'
+import { Label } from '../ui/Label'
+import { Textarea } from '../ui/Textarea'
 import { useMutation } from '@tanstack/react-query'
 import { CommentRequest } from '@/lib/validators/comment'
 import axios from 'axios'
@@ -31,11 +32,14 @@ interface PostCommentProps {
 
 const PostComment: FC<PostCommentProps> = ({ comment, votesAmt, currentVote, postId }) => {
 
+    const {data: session} = useSession()
     const commentRef = useRef<HTMLDivElement>(null)
     const router = useRouter()
-    const {data: session} = useSession()
     const [isReplying, setIsReplying] = useState<boolean>(false)
-    const [input, setInput] = useState<string>('')
+    const [input, setInput] = useState<string>(`@${comment.author.username}`)
+    useOnClickOutside(commentRef, () => {
+        setIsReplying(false)
+    })
 
     const {mutate: PostComment, isLoading} = useMutation ({
         mutationFn: async ({postId, text, replyToId}: CommentRequest) => {
@@ -65,7 +69,7 @@ const PostComment: FC<PostCommentProps> = ({ comment, votesAmt, currentVote, pos
     <div ref={commentRef} className='flex flex-col' >
         <div className='flex items-center'>
         <UserAvatar user={{
-            name: comment.author.name | null,
+            name: comment.author.name || null,
             image: comment.author.image || null,
             }} className='h-6 w-6' />
 
@@ -81,8 +85,8 @@ const PostComment: FC<PostCommentProps> = ({ comment, votesAmt, currentVote, pos
         <div className='flex gap-2 items-center flex-wrap'>
             <CommentVotes 
             commentId={comment.id} 
-            initialVotesAmt={{votesAmt}} 
-            initialVote={currentVote}
+            votesAmt={votesAmt}
+            currentVote={currentVote}
             />
             {/* Checks if user is logged in or not in order to engage conversation */}
             <Button onClick={() => {
@@ -98,10 +102,12 @@ const PostComment: FC<PostCommentProps> = ({ comment, votesAmt, currentVote, pos
                 <Label htmlFor='comment'>Your comment</Label>
                 <div className='mt-2'>
                     
-                    <Textarea id='comment' value={input} onChange={(e) => setInput(e.target.value)} rows={1} placeholder='Join the conversation' /> 
-                    <Button tabIndex={-1} variant='subtle' onClick={() => setIsReplying(false)}>Cancel</Button>
+                    <Textarea onFocus={(e) => e.currentTarget.setSelectionRange(e.currentTarget.value.length, e.currentTarget.value.length)}
+                     autoFocus id='comment' value={input} onChange={(e) => setInput(e.target.value)} rows={1} placeholder='Join the conversation' /> 
+
                     <div className='mt-2 flex justify-end gap-2'>
-                        <Button isLoading={isLoading} disabled={input.length === 0} onClick={() => {
+                    <Button tabIndex={-1} variant='subtle' onClick={() => setIsReplying(false)}>Cancel</Button>
+                        <Button isLoading={isLoading} onClick={() => {
                             if(!input) return 
                             PostComment({
                                 postId,

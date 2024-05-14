@@ -6,6 +6,7 @@ import { useIntersection } from '@mantine/hooks'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { INFINITE_SCROLLING_PAGINATION_RESULTS } from '@/config'
 import axios from 'axios'
+import { Loader2 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import Post from './Post'
 
@@ -42,7 +43,7 @@ const PostFeed: FC<PostFeedProps> = ({initialPosts, subredditName}) => {
                 return pages.length + 1
             },
             //Pass initial posts 
-            initialData: {pages: [initialPosts], pageParams: [1]}
+            initialData: {pages: [initialPosts], pageParams: [1]},
         }
     )
         //Check if they are currently intersecting with the last post then gets more posts
@@ -77,9 +78,8 @@ const PostFeed: FC<PostFeedProps> = ({initialPosts, subredditName}) => {
                 </li>
             )
            } else {
-                return 
-                (  
-                <Post 
+                return (  
+                <Post  
                 key={post.id}
                 currentVote={currentVote}
                 votesAmt={votesAmt}
@@ -88,6 +88,11 @@ const PostFeed: FC<PostFeedProps> = ({initialPosts, subredditName}) => {
          )
         }
         })}
+         {isFetchingNextPage && (
+        <li className='flex justify-center'>
+          <Loader2 className='w-6 h-6 text-zinc-500 animate-spin' />
+        </li>
+      )}
     </ul>
     )
 }

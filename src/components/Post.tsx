@@ -1,11 +1,14 @@
+'use client'
+
 import { formatTimeToNow } from '@/lib/utils'
-import { Post, User } from '@prisma/client'
+import { Post, User, Vote } from '@prisma/client'
 import { MessageSquare } from 'lucide-react'
 import { FC, useRef } from 'react'
+import Link from 'next/link'
 import EditorOutput from './EditorOutput'
 import PostVoteClient from './post-vote/PostVoteClient'
 
-type PartialVote = Pick<PartialVote, 'type'>
+type PartialVote = Pick<Vote, 'type'>
 
 interface PostProps {
     subredditName: string
@@ -18,12 +21,12 @@ interface PostProps {
     currentVote?: PartialVote
 }
 
-const Post: FC<PostProps> = ({subredditName, post, commentAmt, votesAmt, currentVote }) => {
+const Post: FC<PostProps> = ({subredditName, post, commentAmt, votesAmt: _votesAmt, currentVote: _currentVote, }) => {
     const pRef = useRef<HTMLDivElement>(null)
 
     return ( <div className='rounded-md bg-white shadow'>
         <div className='px-6 py-4 flex justify-between'>
-           <PostVoteClient postId={post.id} initialVote={currentVote?.type} initialVotesAmt={votesAmt}/>
+           <PostVoteClient postId={post.id} initialVote={_currentVote?.type} initialVotesAmt={_votesAmt}/>
 
 
 <div className='w-0 flex-1'>
