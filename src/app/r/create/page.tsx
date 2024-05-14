@@ -32,7 +32,6 @@ const Page = () => {
                         description: 'Please choose a different subreddit name.',
                         variant: 'destructive',
                     })
-      
                 }
 
                 if(err.response?.status === 422) {
@@ -55,7 +54,7 @@ const Page = () => {
             })
         },
         onSuccess: (data) => {
-            router.push('/r/${data}')
+            router.push(`/r/${data}`)
         },
     })
 

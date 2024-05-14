@@ -7,6 +7,12 @@ import { buttonVariants } from "@/components/ui/Button"
 import ToFeedButton from "@/components/ToFeedButton"
 import { db } from "@/lib/db"
 import { ReactNode } from "react"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+    title: 'Reddit Clone Project',
+    description: 'Engage and start conversations with others.',
+}
 
 const Layout = async ({
     children, 

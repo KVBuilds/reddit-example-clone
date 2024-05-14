@@ -33,20 +33,21 @@ export async function PATCH(req: Request) {
                 id: session.user.id,
             }, 
             data: {
-                username: name
-            }
+                username: name,
+            },
          })
          return new Response('OK')
 
     } catch (error) {
+        (error)
+       
         if (error instanceof z.ZodError) {
-            return new Response('Invalid request data passed.', {status: 422})
+            return new Response('Invalid request data passed.', {status: 400})
         }
 
         return new Response(
             'Could not update username. Please try again layter.',
             {status: 500,
-
             }
         )
     }

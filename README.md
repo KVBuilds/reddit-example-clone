@@ -1,7 +1,7 @@
 # Reddit-like Experience Project
 
 <p>Built through from a step-by-step guidance on an experience where users can enable and host conversations--creating a community while enabling engagement and interaction.</p>
-<p>Also use this as an example to take several different components into own project.</p>
+<p>Also planning to use this as an example to take several different components into own project.</p>
 
 ## Stack
 <p>
