@@ -2,7 +2,7 @@
 
 import { getAuthSession } from "@/lib/auth"
 import { db } from "@/lib/db"
-import { CommentVoteValidator, PostVoteValidator } from "@/lib/validators/vote"
+import { CommentVoteValidator } from "@/lib/validators/vote"
 import { z } from "zod"
 
 export async function PATCH(req: Request) {
@@ -70,7 +70,7 @@ export async function PATCH(req: Request) {
         return new Response ('OK')
     } catch (error) {
         if (error instanceof z.ZodError) {
-            return new Response('Invalid POST request data passed', {status: 422 })
+            return new Response(error.message, {status: 400 })
         }
         
         return new Response('Could not register your vote, please try again.', { status: 500})

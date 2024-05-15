@@ -1,7 +1,6 @@
 import { getAuthSession } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { PostValidator } from "@/lib/validators/post"
-import { SubredditSubscriptionValidator } from "@/lib/validators/subreddit"
 import { z } from "zod"
 
 export async function POST(req: Request) {
@@ -14,7 +13,7 @@ export async function POST(req: Request) {
         const body = await req.json()
         const {subredditId, title, content} = PostValidator.parse(body)
 
-        const subscriptionExists = await db.subscription.findFirst ({   
+        const subscription = await db.subscription.findFirst ({   
             where: {
                 subredditId, 
                 userId: session.user.id,
@@ -22,8 +21,8 @@ export async function POST(req: Request) {
         })
 
         // Checks if there is no subscription
-        if(subscriptionExists){             
-            return new Response ('Subscribe to post.', {status: 400,})
+        if(!subscription){             
+            return new Response ('Subscribe to post.', {status: 403,})
         }
 
         await db.post.create({
@@ -38,7 +37,7 @@ export async function POST(req: Request) {
         return new Response('OK')
     } catch (error) {
         if (error instanceof z.ZodError) {
-            return new Response('Invalid request data passed', {status: 422 })
+            return new Response(error.message, {status: 400 })
         }
         
         return new Response('Could not post to subreddit at this time, please try again later.', { status: 500})
